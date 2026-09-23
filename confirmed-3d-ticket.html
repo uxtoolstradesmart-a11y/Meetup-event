@@ -380,7 +380,7 @@ const BOOKING = {
     if (!g || g.x == null || g.y == null || g.z == null) return;
     if (gyro.src === 'gyroscope') return;
     if (gyro.src !== 'accelerometer' && performance.now() - listenedAt < 1200) return; // give the gyroscope first dibs
-    const ios = needsPermission; // WebKit reports the opposite sign
+    const ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // WebKit reports the opposite sign
     const k = ios ? -1 : 1;
     const gxv = g.x * k, gyv = g.y * k, gzv = g.z * k;
     feed(Math.atan2(-gxv, Math.hypot(gyv, gzv)) * DEG, Math.atan2(gyv, gzv) * DEG, 'accelerometer');
@@ -415,26 +415,31 @@ const BOOKING = {
   }
   const needsPermission = typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function';
   function askPermission() {
-    if (gyro.on || listening || !needsPermission) return;
+    if (gyro.on || !needsPermission || permState === 'asking') return;
     permState = 'asking';
     const motion = (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function')
       ? DeviceMotionEvent.requestPermission().catch(() => 'error') : Promise.resolve('granted');
     Promise.all([DeviceOrientationEvent.requestPermission().catch((err) => 'error: ' + err.name), motion])
       .then(([o, m]) => {
         permState = o + ' / ' + m;
-        if (o === 'granted' || m === 'granted') listen();
+        if (o === 'granted' || m === 'granted') { chip.hidden = true; listen(); }
         else if (o === 'denied') chip.hidden = true; // an 'error' (no user gesture) leaves the chip up to try again
       });
   }
   if (typeof DeviceOrientationEvent !== 'undefined') {
+    // Start listening straight away: Android browsers deliver events with no prompt, and on iOS nothing
+    // arrives until permission is granted, so this is harmless there.
+    listen();
     if (needsPermission) {
-      // iOS (Safari and Chrome — both WebKit): motion access needs a tap. The request must come from a
-      // click/touchend, not pointerdown, or iOS rejects it as "not a user gesture".
-      chip.hidden = false;
-      chip.addEventListener('click', () => { askPermission(); buzz(8); });
-      ticket.addEventListener('click', askPermission);
-    } else {
-      listen();
+      // Some browsers (recent Chrome on Android) expose requestPermission but grant it without a tap,
+      // and iOS grants it silently if the user already allowed it this session. Try quietly first.
+      askPermission();
+      // iOS still needs one tap the first time. Any tap on the page asks (the ticket, a button, anywhere);
+      // the chip is only shown if no motion data has arrived shortly after load. It must be a click, not
+      // pointerdown, or iOS rejects it as "not a user gesture".
+      setTimeout(() => { if (!gyro.on && !/^(denied|granted)/.test(permState)) chip.hidden = false; }, 900);
+      document.addEventListener('click', askPermission, true);
+      chip.addEventListener('click', () => buzz(8));
     }
   }
 
