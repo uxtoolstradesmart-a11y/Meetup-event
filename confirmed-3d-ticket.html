@@ -343,24 +343,45 @@ const BOOKING = {
   celebrate(); // may be blocked until first interaction on a cold page load — see HANDOFF.md
 
   /* ---------- Gyro parallax ----------
-     Subtle: max ±7deg, smoothed, and the neutral angle slowly re-centres to however the phone is held. */
-  const gyro = { on: false, bx: null, by: null, tx: 0, ty: 0, x: 0, y: 0, raf: 0 };
-  const MAX = 7, GAIN = 0.4, RECENTER = 0.006, EASE = 0.1;
+     Subtle: max ±7deg, smoothed, and the neutral angle slowly re-centres to however the phone is held.
+     Source 1: deviceorientation (gyroscope). Source 2 (phones without a usable gyro, or when orientation
+     reports nulls): devicemotion gravity vector from the accelerometer. */
+  const gyro = { on: false, src: '', bx: null, by: null, tx: 0, ty: 0, x: 0, y: 0, raf: 0, n: 0, raw: [0, 0] };
+  const MAX = 7, GAIN = 0.6, RECENTER = 0.003, EASE = 0.12;
+  const DEG = 180 / Math.PI;
   function screenAngle() {
-    return (screen.orientation && typeof screen.orientation.angle === 'number') ? screen.orientation.angle : (window.orientation || 0);
+    const a = (screen.orientation && typeof screen.orientation.angle === 'number') ? screen.orientation.angle : (window.orientation || 0);
+    return ((a % 360) + 360) % 360;
   }
-  function onOrient(e) {
-    if (e.beta == null || e.gamma == null) return;
-    const a = ((screenAngle() % 360) + 360) % 360;
-    let x = e.gamma, y = e.beta;
-    if (a === 90) { x = e.beta; y = -e.gamma; }
-    else if (a === 270) { x = -e.beta; y = e.gamma; }
-    else if (a === 180) { x = -e.gamma; y = -e.beta; }
+  // gamma-like x (left/right tilt), beta-like y (front/back tilt), in degrees, corrected for landscape
+  function feed(gx, by, src) {
+    if (gyro.src && gyro.src !== src) return;
+    gyro.src = src;
+    const a = screenAngle();
+    let x = gx, y = by;
+    if (a === 90) { x = by; y = -gx; }
+    else if (a === 270) { x = -by; y = gx; }
+    else if (a === 180) { x = -gx; y = -by; }
+    gyro.raw = [x, y]; gyro.n++;
     if (gyro.bx === null) { gyro.bx = x; gyro.by = y; }
     gyro.bx += (x - gyro.bx) * RECENTER;
     gyro.by += (y - gyro.by) * RECENTER;
     gyro.tx = x - gyro.bx; gyro.ty = y - gyro.by;
     if (!gyro.on) startGyro();
+  }
+  function onOrient(e) {
+    if (e.beta == null || e.gamma == null) return;
+    feed(e.gamma, e.beta, 'gyroscope');
+  }
+  function onMotion(e) {
+    const g = e.accelerationIncludingGravity;
+    if (!g || g.x == null || g.y == null || g.z == null) return;
+    if (gyro.src === 'gyroscope') return;
+    if (gyro.src !== 'accelerometer' && performance.now() - listenedAt < 1200) return; // give the gyroscope first dibs
+    const ios = needsPermission; // WebKit reports the opposite sign
+    const k = ios ? -1 : 1;
+    const gxv = g.x * k, gyv = g.y * k, gzv = g.z * k;
+    feed(Math.atan2(-gxv, Math.hypot(gyv, gzv)) * DEG, Math.atan2(gyv, gzv) * DEG, 'accelerometer');
   }
   function startGyro() {
     gyro.on = true; chip.hidden = true;
@@ -383,23 +404,58 @@ const BOOKING = {
     };
     gyro.raf = requestAnimationFrame(loop);
   }
-  function listen() { window.addEventListener('deviceorientation', onOrient); }
+  let listening = false, listenedAt = 0, permState = 'not needed';
+  function listen() {
+    if (listening) return;
+    listening = true; listenedAt = performance.now();
+    window.addEventListener('deviceorientation', onOrient);
+    window.addEventListener('devicemotion', onMotion);
+  }
   const needsPermission = typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function';
   function askPermission() {
-    if (gyro.on || !needsPermission) return;
-    DeviceOrientationEvent.requestPermission()
-      .then((state) => { if (state === 'granted') listen(); else chip.hidden = true; })
-      .catch(() => { chip.hidden = true; });
+    if (gyro.on || listening || !needsPermission) return;
+    permState = 'asking';
+    const motion = (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function')
+      ? DeviceMotionEvent.requestPermission().catch(() => 'error') : Promise.resolve('granted');
+    Promise.all([DeviceOrientationEvent.requestPermission().catch((err) => 'error: ' + err.name), motion])
+      .then(([o, m]) => {
+        permState = o + ' / ' + m;
+        if (o === 'granted' || m === 'granted') listen();
+        else if (o === 'denied') chip.hidden = true; // an 'error' (no user gesture) leaves the chip up to try again
+      });
   }
   if (!reduced && typeof DeviceOrientationEvent !== 'undefined') {
     if (needsPermission) {
-      // iOS: motion access needs a tap. Offer the chip, and also ask on the first touch of the ticket.
+      // iOS (Safari and Chrome — both WebKit): motion access needs a tap. The request must come from a
+      // click/touchend, not pointerdown, or iOS rejects it as "not a user gesture".
       chip.hidden = false;
-      chip.addEventListener('click', () => { buzz(8); askPermission(); });
-      ticket.addEventListener('pointerdown', askPermission, { once: true });
+      chip.addEventListener('click', () => { askPermission(); buzz(8); });
+      ticket.addEventListener('click', askPermission);
     } else {
       listen();
     }
+  }
+
+  // Add ?debug to the URL to see what the sensors report
+  if (/[?&]debug\b/.test(location.search)) {
+    const box = document.createElement('pre');
+    box.style.cssText = 'position:fixed;left:8px;top:8px;z-index:99;margin:0;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.75);color:#3DDBB5;font:11px/1.5 "Roboto Mono",monospace;pointer-events:none;white-space:pre';
+    document.body.appendChild(box);
+    const tick = () => {
+      box.textContent = [
+        'secure ctx : ' + window.isSecureContext,
+        'reduced mo : ' + reduced,
+        'needs perm : ' + needsPermission + ' (' + permState + ')',
+        'listening  : ' + listening,
+        'source     : ' + (gyro.src || 'none yet'),
+        'events     : ' + gyro.n,
+        'tilt x/y   : ' + gyro.raw[0].toFixed(1) + ' / ' + gyro.raw[1].toFixed(1),
+        'ticket rot : ' + (gyroEl.style.transform || '-'),
+        'vibrate    : ' + canVibrate
+      ].join('\n');
+      requestAnimationFrame(tick);
+    };
+    tick();
   }
 
   // Toast + actions
