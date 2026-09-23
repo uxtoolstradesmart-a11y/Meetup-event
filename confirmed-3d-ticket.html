@@ -97,7 +97,7 @@ input:focus{outline:none;border-color:#3F71EB!important;box-shadow:0 0 0 4px rgb
 <style>body{display:flex;justify-content:center;min-height:100vh;background:#070C1A}</style>
 </head>
 <body>
-<div id="stage" style="position: relative; width: 100%; max-width: 390px; height: 980px; display: flex; flex-direction: column; font-family: Roboto, Arial, sans-serif; color: #18213B; background: radial-gradient(ellipse 120% 40% at 50% 38%, rgba(53,100,217,0.5), rgba(53,100,217,0) 70%), #0F1830; overflow: hidden;">
+<div id="stage" style="position: relative; width: 100%; max-width: 390px; min-height: 100vh; display: flex; flex-direction: column; font-family: Roboto, Arial, sans-serif; color: #18213B; background: radial-gradient(ellipse 120% 40% at 50% 38%, rgba(53,100,217,0.5), rgba(53,100,217,0) 70%), #0F1830; overflow: hidden;">
 
 <div aria-hidden="true" id="confetti" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden;">
 <span class="confetti" style="left: 24.2%; width: 6px; height: 10px; border-radius: 2px; background: #3F71EB; animation-delay: 0.09s; animation-duration: 2.95s;"></span>
@@ -141,16 +141,16 @@ input:focus{outline:none;border-color:#3F71EB!important;box-shadow:0 0 0 4px rgb
 <span style="display: flex; align-items: center;"><button type="button" id="replayBtn" aria-label="Replay celebration" class="ghost" style="width: 44px; height: 44px; border-radius: 10px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; color: #CEE0FF; cursor: pointer;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg></button><a href="#" aria-label="Close and go back to the event page" class="ghost" style="width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #CEE0FF;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></a></span>
 </div>
 
-<div style="position: relative; flex-grow: 1; box-sizing: border-box; padding: 8px 20px 0; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;">
+<div style="position: relative; box-sizing: border-box; padding: 8px 20px 0; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;">
 <span class="pop" style="width: 64px; height: 64px; border-radius: 999px; background: #00B48E; box-shadow: 0 0 0 8px rgba(0,180,142,0.18), 0 0 40px rgba(0,180,142,0.5); display: flex; align-items: center; justify-content: center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="tick" d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
 <h1 class="rise" style="margin: 6px 0 0; font-size: 32px; line-height: 1.1; font-weight: 900; letter-spacing: -0.03em; color: #ffffff;">You’re <span class="grad-text">in!</span></h1>
 <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #B7C5E8;">Your registration confirmation is on its way to <span style="color: #ffffff; font-weight: 600;">aarav.sharma@example.com</span>.</p>
 <span style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(157,186,255,0.22); font-size: 13px; font-weight: 600; color: #CEE0FF;"><span class="live" style="width: 8px; height: 8px; border-radius: 999px; background: #3DDBB5;"></span><span style="color: #3DDBB5;">52</span> days to go</span>
 
 <!-- 3D TICKET -->
-<div style="align-self: stretch; position: relative; height: 350px; margin-top: 4px;">
+<div style="align-self: stretch; position: relative; height: 338px; margin-top: 4px;">
 <div id="floor" aria-hidden="true" style="position: absolute; left: 18%; right: 18%; bottom: 0; height: 28px;"><div class="floorShadow" style="position: absolute; inset: 0; right: 18%; bottom: 0; height: 28px; border-radius: 999px; background: radial-gradient(closest-side, rgba(0,0,0,0.55), rgba(0,0,0,0));"></div></div>
-<button type="button" id="ticket" aria-label="Ticket. Tap to show entry pass" style="position: absolute; left: 4px; right: 4px; top: 6px; height: 314px; padding: 0; border: 0; background: transparent; cursor: grab; touch-action: none; perspective: 1100px; transform-style: preserve-3d; font-family: Roboto, Arial, sans-serif; text-align: left; -webkit-tap-highlight-color: transparent;">
+<div id="ticket" role="img" aria-label="Ticket: Traders Meetup 2026, Aarav Sharma, Sat 14 Nov 2026, 2:00 to 6:30 PM, Meridian Hall, Lower Parel, Mumbai. Booking ID TSM-26-04821" style="position: absolute; left: 4px; right: 4px; top: 6px; height: 314px; padding: 0; border: 0; background: transparent; perspective: 1100px; transform-style: preserve-3d; font-family: Roboto, Arial, sans-serif; text-align: left; -webkit-tap-highlight-color: transparent;">
 <div class="dropIn" style="position: absolute; inset: 0; transform-style: preserve-3d;">
 <div class="sway3d" style="position: absolute; inset: 0; transform-style: preserve-3d;">
 <div id="gyro">
@@ -171,28 +171,15 @@ input:focus{outline:none;border-color:#3F71EB!important;box-shadow:0 0 0 4px rgb
 </div>
 </div>
 <div style="position: relative; height: 0; border-top: 2px dashed rgba(157,186,255,0.32); margin: 0 18px;"></div>
-<div style="position: relative; padding: 14px 22px 18px; display: flex; align-items: flex-end; justify-content: space-between; transform-style: preserve-3d;"><span style="display: flex; flex-direction: column; gap: 2px; transform: translateZ(26px);"><span style="font-family: 'Roboto Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: #9DBAFF;">BOOKING ID</span><span style="font-size: 24px; font-weight: 800; color: #ffffff; letter-spacing: 0.02em;">TSM-26-04821</span></span><span style="transform: translateZ(14px);"><svg width="104" height="32" viewBox="0 0 130 40" aria-hidden="true"><g fill="#CEE0FF" opacity="0.7"><rect x="0" y="0" width="3" height="40"></rect><rect x="6" y="0" width="1.5" height="40"></rect><rect x="10" y="0" width="4" height="40"></rect><rect x="17" y="0" width="1.5" height="40"></rect><rect x="21" y="0" width="2.5" height="40"></rect><rect x="27" y="0" width="5" height="40"></rect><rect x="35" y="0" width="1.5" height="40"></rect><rect x="39" y="0" width="3" height="40"></rect><rect x="45" y="0" width="1.5" height="40"></rect><rect x="49" y="0" width="4" height="40"></rect><rect x="56" y="0" width="2" height="40"></rect><rect x="61" y="0" width="1.5" height="40"></rect><rect x="65" y="0" width="5" height="40"></rect><rect x="73" y="0" width="2" height="40"></rect><rect x="78" y="0" width="1.5" height="40"></rect><rect x="82" y="0" width="3" height="40"></rect><rect x="88" y="0" width="4" height="40"></rect><rect x="95" y="0" width="1.5" height="40"></rect><rect x="99" y="0" width="2.5" height="40"></rect><rect x="104" y="0" width="5" height="40"></rect><rect x="112" y="0" width="1.5" height="40"></rect><rect x="116" y="0" width="3" height="40"></rect><rect x="122" y="0" width="1.5" height="40"></rect><rect x="126" y="0" width="4" height="40"></rect></g></svg></span></div>
-</div>
-
-<div class="face" style="position: absolute; inset: 0; transform: translateZ(-4.5px) rotateY(180deg); transform-style: preserve-3d; border-radius: 20px; background: linear-gradient(160deg, #ffffff 0%, #EEF3FF 100%); border: 1px solid #CFD9F2; box-shadow: 0 0 44px rgba(83,114,250,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; box-sizing: border-box;">
-<span style="font-family: 'Roboto Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; color: #2855C5; transform: translateZ(16px);">ENTRY PASS</span>
-<div style="padding: 10px; border-radius: 14px; background: #ffffff; border: 2px solid #E4E9F5; box-shadow: 0 14px 30px rgba(24,33,59,0.18); transform: translateZ(30px);"><svg width="147" height="147" viewBox="0 0 147 147" role="img" aria-label="Entry QR code for booking TSM-26-04821"><g fill="#0F1830"><rect x="63" y="0" width="7" height="7"></rect><rect x="70" y="0" width="7" height="7"></rect><rect x="84" y="0" width="7" height="7"></rect><rect x="70" y="7" width="7" height="7"></rect><rect x="56" y="14" width="7" height="7"></rect><rect x="63" y="14" width="7" height="7"></rect><rect x="56" y="21" width="7" height="7"></rect><rect x="63" y="21" width="7" height="7"></rect><rect x="70" y="21" width="7" height="7"></rect><rect x="70" y="28" width="7" height="7"></rect><rect x="84" y="28" width="7" height="7"></rect><rect x="56" y="35" width="7" height="7"></rect><rect x="77" y="35" width="7" height="7"></rect><rect x="84" y="35" width="7" height="7"></rect><rect x="56" y="42" width="7" height="7"></rect><rect x="63" y="42" width="7" height="7"></rect><rect x="70" y="42" width="7" height="7"></rect><rect x="84" y="42" width="7" height="7"></rect><rect x="70" y="49" width="7" height="7"></rect><rect x="77" y="49" width="7" height="7"></rect><rect x="0" y="56" width="7" height="7"></rect><rect x="7" y="56" width="7" height="7"></rect><rect x="21" y="56" width="7" height="7"></rect><rect x="35" y="56" width="7" height="7"></rect><rect x="56" y="56" width="7" height="7"></rect><rect x="63" y="56" width="7" height="7"></rect><rect x="70" y="56" width="7" height="7"></rect><rect x="84" y="56" width="7" height="7"></rect><rect x="91" y="56" width="7" height="7"></rect><rect x="112" y="56" width="7" height="7"></rect><rect x="119" y="56" width="7" height="7"></rect><rect x="133" y="56" width="7" height="7"></rect><rect x="0" y="63" width="7" height="7"></rect><rect x="21" y="63" width="7" height="7"></rect><rect x="42" y="63" width="7" height="7"></rect><rect x="49" y="63" width="7" height="7"></rect><rect x="70" y="63" width="7" height="7"></rect><rect x="91" y="63" width="7" height="7"></rect><rect x="105" y="63" width="7" height="7"></rect><rect x="112" y="63" width="7" height="7"></rect><rect x="140" y="63" width="7" height="7"></rect><rect x="0" y="70" width="7" height="7"></rect><rect x="28" y="70" width="7" height="7"></rect><rect x="49" y="70" width="7" height="7"></rect><rect x="63" y="70" width="7" height="7"></rect><rect x="70" y="70" width="7" height="7"></rect><rect x="77" y="70" width="7" height="7"></rect><rect x="84" y="70" width="7" height="7"></rect><rect x="91" y="70" width="7" height="7"></rect><rect x="98" y="70" width="7" height="7"></rect><rect x="112" y="70" width="7" height="7"></rect><rect x="126" y="70" width="7" height="7"></rect><rect x="14" y="77" width="7" height="7"></rect><rect x="28" y="77" width="7" height="7"></rect><rect x="35" y="77" width="7" height="7"></rect><rect x="49" y="77" width="7" height="7"></rect><rect x="56" y="77" width="7" height="7"></rect><rect x="70" y="77" width="7" height="7"></rect><rect x="84" y="77" width="7" height="7"></rect><rect x="98" y="77" width="7" height="7"></rect><rect x="105" y="77" width="7" height="7"></rect><rect x="119" y="77" width="7" height="7"></rect><rect x="0" y="84" width="7" height="7"></rect><rect x="7" y="84" width="7" height="7"></rect><rect x="14" y="84" width="7" height="7"></rect><rect x="21" y="84" width="7" height="7"></rect><rect x="42" y="84" width="7" height="7"></rect><rect x="49" y="84" width="7" height="7"></rect><rect x="63" y="84" width="7" height="7"></rect><rect x="70" y="84" width="7" height="7"></rect><rect x="91" y="84" width="7" height="7"></rect><rect x="119" y="84" width="7" height="7"></rect><rect x="133" y="84" width="7" height="7"></rect><rect x="77" y="91" width="7" height="7"></rect><rect x="84" y="91" width="7" height="7"></rect><rect x="98" y="91" width="7" height="7"></rect><rect x="112" y="91" width="7" height="7"></rect><rect x="126" y="91" width="7" height="7"></rect><rect x="133" y="91" width="7" height="7"></rect><rect x="140" y="91" width="7" height="7"></rect><rect x="70" y="98" width="7" height="7"></rect><rect x="77" y="98" width="7" height="7"></rect><rect x="112" y="98" width="7" height="7"></rect><rect x="70" y="105" width="7" height="7"></rect><rect x="91" y="105" width="7" height="7"></rect><rect x="112" y="105" width="7" height="7"></rect><rect x="56" y="112" width="7" height="7"></rect><rect x="70" y="112" width="7" height="7"></rect><rect x="84" y="112" width="7" height="7"></rect><rect x="119" y="112" width="7" height="7"></rect><rect x="56" y="119" width="7" height="7"></rect><rect x="63" y="119" width="7" height="7"></rect><rect x="70" y="119" width="7" height="7"></rect><rect x="84" y="119" width="7" height="7"></rect><rect x="91" y="119" width="7" height="7"></rect><rect x="98" y="119" width="7" height="7"></rect><rect x="119" y="119" width="7" height="7"></rect><rect x="133" y="119" width="7" height="7"></rect><rect x="56" y="126" width="7" height="7"></rect><rect x="98" y="126" width="7" height="7"></rect><rect x="105" y="126" width="7" height="7"></rect><rect x="112" y="126" width="7" height="7"></rect><rect x="126" y="126" width="7" height="7"></rect><rect x="133" y="126" width="7" height="7"></rect><rect x="140" y="126" width="7" height="7"></rect><rect x="56" y="133" width="7" height="7"></rect><rect x="77" y="133" width="7" height="7"></rect><rect x="105" y="133" width="7" height="7"></rect><rect x="119" y="133" width="7" height="7"></rect><rect x="126" y="133" width="7" height="7"></rect><rect x="140" y="133" width="7" height="7"></rect><rect x="56" y="140" width="7" height="7"></rect><rect x="70" y="140" width="7" height="7"></rect><rect x="77" y="140" width="7" height="7"></rect><rect x="91" y="140" width="7" height="7"></rect><rect x="98" y="140" width="7" height="7"></rect><rect x="119" y="140" width="7" height="7"></rect><rect x="126" y="140" width="7" height="7"></rect><rect x="133" y="140" width="7" height="7"></rect><rect x="140" y="140" width="7" height="7"></rect></g><rect x="0" y="0" width="49" height="49" fill="#0F1830"></rect><rect x="7" y="7" width="35" height="35" fill="#ffffff"></rect><rect x="14" y="14" width="21" height="21" fill="#0F1830"></rect><rect x="98" y="0" width="49" height="49" fill="#0F1830"></rect><rect x="105" y="7" width="35" height="35" fill="#ffffff"></rect><rect x="112" y="14" width="21" height="21" fill="#0F1830"></rect><rect x="0" y="98" width="49" height="49" fill="#0F1830"></rect><rect x="7" y="105" width="35" height="35" fill="#ffffff"></rect><rect x="14" y="112" width="21" height="21" fill="#0F1830"></rect></svg></div>
-<span style="font-size: 15px; font-weight: 700; color: #18213B; transform: translateZ(20px);">Show this at the entry</span>
-<span style="font-family: 'Roboto Mono', monospace; font-size: 13px; color: #5A6480; transform: translateZ(12px);">Booking ID · TSM-26-04821</span>
+<div style="position: relative; padding: 14px 22px 18px; display: flex; align-items: flex-end; justify-content: space-between; transform-style: preserve-3d;"><span style="display: flex; flex-direction: column; gap: 2px; transform: translateZ(26px);"><span style="font-family: 'Roboto Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: #9DBAFF;">BOOKING ID</span><span style="font-family: 'Roboto Mono', monospace; font-size: 14px; font-weight: 600; color: #ffffff; letter-spacing: 0.04em;">TSM-26-04821</span></span><span style="transform: translateZ(14px);"><svg width="104" height="32" viewBox="0 0 130 40" aria-hidden="true"><g fill="#CEE0FF" opacity="0.7"><rect x="0" y="0" width="3" height="40"></rect><rect x="6" y="0" width="1.5" height="40"></rect><rect x="10" y="0" width="4" height="40"></rect><rect x="17" y="0" width="1.5" height="40"></rect><rect x="21" y="0" width="2.5" height="40"></rect><rect x="27" y="0" width="5" height="40"></rect><rect x="35" y="0" width="1.5" height="40"></rect><rect x="39" y="0" width="3" height="40"></rect><rect x="45" y="0" width="1.5" height="40"></rect><rect x="49" y="0" width="4" height="40"></rect><rect x="56" y="0" width="2" height="40"></rect><rect x="61" y="0" width="1.5" height="40"></rect><rect x="65" y="0" width="5" height="40"></rect><rect x="73" y="0" width="2" height="40"></rect><rect x="78" y="0" width="1.5" height="40"></rect><rect x="82" y="0" width="3" height="40"></rect><rect x="88" y="0" width="4" height="40"></rect><rect x="95" y="0" width="1.5" height="40"></rect><rect x="99" y="0" width="2.5" height="40"></rect><rect x="104" y="0" width="5" height="40"></rect><rect x="112" y="0" width="1.5" height="40"></rect><rect x="116" y="0" width="3" height="40"></rect><rect x="122" y="0" width="1.5" height="40"></rect><rect x="126" y="0" width="4" height="40"></rect></g></svg></span></div>
 </div>
 
 </div>
 </div>
 </div>
 </div>
-</button>
-<div id="sparks" hidden>
-<div aria-hidden="true" style="position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none;">
-<span class="spark" style="--dx: 162px; --dy: -14px; width: 8px; height: 8px; background: #6F8FFF; animation-delay: 0.06s;"></span><span class="spark" style="--dx: 147px; --dy: 62px; width: 8px; height: 8px; background: #EEB268; animation-delay: 0.07s;"></span><span class="spark" style="--dx: 124px; --dy: 97px; width: 10px; height: 10px; background: #6F8FFF; animation-delay: 0.06s;"></span><span class="spark" style="--dx: 23px; --dy: 110px; width: 10px; height: 10px; background: #9DBAFF; animation-delay: 0.10s;"></span><span class="spark" style="--dx: -40px; --dy: 136px; width: 10px; height: 10px; background: #3DDBB5; animation-delay: 0.02s;"></span><span class="spark" style="--dx: -100px; --dy: 69px; width: 6px; height: 6px; background: #EEB268; animation-delay: 0.06s;"></span><span class="spark" style="--dx: -171px; --dy: 52px; width: 10px; height: 10px; background: #ffffff; animation-delay: 0.05s;"></span><span class="spark" style="--dx: -156px; --dy: -15px; width: 6px; height: 6px; background: #EEB268; animation-delay: 0.01s;"></span><span class="spark" style="--dx: -136px; --dy: -34px; width: 10px; height: 10px; background: #ffffff; animation-delay: 0.09s;"></span><span class="spark" style="--dx: -79px; --dy: -107px; width: 8px; height: 8px; background: #6F8FFF; animation-delay: 0.04s;"></span><span class="spark" style="--dx: -31px; --dy: -130px; width: 8px; height: 8px; background: #3DDBB5; animation-delay: 0.10s;"></span><span class="spark" style="--dx: 70px; --dy: -124px; width: 6px; height: 6px; background: #EEB268; animation-delay: 0.12s;"></span><span class="spark" style="--dx: 122px; --dy: -88px; width: 10px; height: 10px; background: #9DBAFF; animation-delay: 0.08s;"></span><span class="spark" style="--dx: 141px; --dy: -29px; width: 6px; height: 6px; background: #3DDBB5; animation-delay: 0.06s;"></span>
 </div>
 </div>
-</div>
-<span class="tapHint" style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #9DBAFF;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5a2 2 0 0 1 4 0v5"></path><path d="M13 9.5a2 2 0 0 1 4 0V11"></path><path d="M17 10.5a2 2 0 0 1 4 0V15a6 6 0 0 1-6 6h-2a6 6 0 0 1-4.8-2.4L5 15.5a2 2 0 0 1 3-2.6L9 14"></path></svg><span id="hint">Drag to spin · tap to flip</span></span>
 <button type="button" id="motionChip" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"></rect><path d="M3 8c-1 2.5-1 5.5 0 8M21 8c1 2.5 1 5.5 0 8"></path></svg>Enable tilt effect</button>
 <label class="hap" aria-hidden="true"><input type="checkbox" switch id="hapSwitch" tabindex="-1">haptic</label>
 </div>
@@ -216,7 +203,7 @@ input:focus{outline:none;border-color:#3F71EB!important;box-shadow:0 0 0 4px rgb
 </div>
 
 <div id="toastWrap" hidden>
-<div role="status" class="toast" style="position: absolute; left: 50%; bottom: 196px; display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 12px; background: #ffffff; box-shadow: 0 14px 30px rgba(0,0,0,0.35); font-size: 14px; font-weight: 600; color: #18213B; white-space: nowrap;"><span style="width: 22px; height: 22px; border-radius: 999px; background: #00B48E; color: #ffffff; display: flex; align-items: center; justify-content: center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"></path></svg></span><span id="toastText"></span></div>
+<div role="status" class="toast" style="position: fixed; z-index: 5; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 12px; background: #ffffff; box-shadow: 0 14px 30px rgba(0,0,0,0.35); font-size: 14px; font-weight: 600; color: #18213B; white-space: nowrap;"><span style="width: 22px; height: 22px; border-radius: 999px; background: #00B48E; color: #ffffff; display: flex; align-items: center; justify-content: center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"></path></svg></span><span id="toastText"></span></div>
 </div>
 
 </div>
@@ -234,84 +221,15 @@ const BOOKING = {
 };
 
 (function () {
-  const ticket = document.getElementById('ticket');
-  const card = document.getElementById('card3d');
   const foil = document.getElementById('foil');
   const glare = foil.nextElementSibling;
-  const sparks = document.getElementById('sparks');
-  const hint = document.getElementById('hint');
   const gyroEl = document.getElementById('gyro');
   const floor = document.getElementById('floor');
   const stage = document.getElementById('stage');
   const chip = document.getElementById('motionChip');
   const hapLabel = document.getElementById('hapSwitch').parentElement;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let rx = 0, ry = 0, drag = null, active = false, pointerOn = false;
   const clamp = (v, m) => Math.max(-m, Math.min(m, v));
-  const snap = (v) => Math.round(v / 180) * 180;
-  const isBack = (v) => ((Math.round(v / 180) % 2) + 2) % 2 === 1;
-
-  function render(mode) {
-    card.style.transition = mode === 'drag' ? 'transform 0.04s linear'
-      : mode === 'tilt' ? 'transform 0.15s ease-out'
-      : 'transform 0.9s cubic-bezier(.2,1.5,.35,1)';
-    card.style.transform = 'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
-    const back = isBack(ry);
-    hint.textContent = back ? 'Entry pass · tap or drag to flip back'
-      : gyro.on ? 'Tilt · drag to spin · tap to flip' : 'Drag to spin · tap to flip';
-    ticket.setAttribute('aria-label', back ? 'Entry pass. Tap to show ticket details' : 'Ticket. Tap to show entry pass');
-    ticket.style.cursor = mode === 'drag' ? 'grabbing' : 'grab';
-  }
-  function light(px, py, on) {
-    glare.style.opacity = on ? 1 : 0;
-    glare.style.background = 'radial-gradient(circle at ' + (px * 100) + '% ' + (py * 100) + '%, rgba(255,255,255,0.30), rgba(255,255,255,0) 42%)';
-    foil.classList.toggle('foilIdle', !on);
-    foil.style.backgroundPosition = (100 - px * 100) + '% ' + (py * 100) + '%';
-  }
-  function burst() {
-    sparks.hidden = true;
-    requestAnimationFrame(() => { sparks.hidden = false; setTimeout(() => (sparks.hidden = true), 1000); });
-  }
-  function flipTo(next) {
-    const was = isBack(ry);
-    ry = next; rx = 0; active = false;
-    light(0.5, 0.3, false);
-    render('spring');
-    if (isBack(next) !== was) { burst(); buzz([12, 50, 6]); }
-    else buzz(6);
-  }
-  function pos(e) {
-    const r = ticket.getBoundingClientRect();
-    return { px: (e.clientX - r.left) / r.width, py: (e.clientY - r.top) / r.height };
-  }
-  ticket.addEventListener('pointerdown', (e) => {
-    pointerOn = true;
-    drag = { x: e.clientX, base: snap(ry), moved: false };
-    try { ticket.setPointerCapture(e.pointerId); } catch (err) {}
-  });
-  ticket.addEventListener('pointermove', (e) => {
-    const p = pos(e);
-    light(p.px, p.py, true);
-    if (drag) {
-      const dx = e.clientX - drag.x;
-      if (Math.abs(dx) > 6) drag.moved = true;
-      ry = drag.base + dx * 0.75; rx = clamp((0.5 - p.py) * 18, 14);
-      render(drag.moved ? 'drag' : 'tilt');
-    } else {
-      const base = snap(ry), dir = isBack(base) ? -1 : 1;
-      ry = base + dir * clamp((p.px - 0.5) * 34, 17); rx = clamp((0.5 - p.py) * 26, 13);
-      render('tilt');
-    }
-  });
-  const up = () => {
-    const d = drag; drag = null; pointerOn = false;
-    if (!d) return;
-    if (!d.moved) flipTo(d.base + 180); else flipTo(snap(ry));
-  };
-  ticket.addEventListener('pointerup', up);
-  ticket.addEventListener('pointercancel', up);
-  ticket.addEventListener('pointerleave', () => { if (!drag) { pointerOn = false; rx = 0; ry = snap(ry); light(0.5, 0.3, false); render('spring'); } });
-  ticket.addEventListener('click', (e) => { if (e.detail === 0) flipTo(snap(ry) + 180); }); // keyboard
 
   /* ---------- Haptics ----------
      Android Chrome: navigator.vibrate (needs the user to have interacted with the page once —
@@ -336,7 +254,6 @@ const BOOKING = {
     document.getAnimations().forEach((a) => {
       if (a.animationName && names.includes(a.animationName)) { a.cancel(); a.play(); }
     });
-    ry = snap(ry); if (isBack(ry)) ry += 180; rx = 0; render('spring');
     celebrate();
   }
   document.getElementById('replayBtn').addEventListener('click', replay);
@@ -388,14 +305,13 @@ const BOOKING = {
   function startGyro() {
     gyro.on = true; chip.hidden = true;
     stage.classList.add('gyroOn');
-    render('spring');
     const loop = () => {
       gyro.x += (gyro.tx - gyro.x) * EASE;
       gyro.y += (gyro.ty - gyro.y) * EASE;
       const ay = clamp(gyro.x * GAIN, MAX), ax = clamp(-gyro.y * GAIN, MAX);
       gyroEl.style.transform = 'translate3d(' + (ay * SHIFT).toFixed(1) + 'px,' + (-ax * SHIFT).toFixed(1) + 'px,0) rotateX(' + ax.toFixed(2) + 'deg) rotateY(' + ay.toFixed(2) + 'deg)';
       floor.style.transform = 'translateX(' + (-ay * 2).toFixed(1) + 'px) scaleX(' + (1 - Math.abs(ay) / 50).toFixed(3) + ')';
-      if (!pointerOn) {
+      {
         const px = 0.5 + ay / (MAX * 2.4), py = 0.35 - ax / (MAX * 2.4);
         glare.style.opacity = 0.55;
         glare.style.background = 'radial-gradient(circle at ' + (px * 100).toFixed(1) + '% ' + (py * 100).toFixed(1) + '%, rgba(255,255,255,0.22), rgba(255,255,255,0) 45%)';

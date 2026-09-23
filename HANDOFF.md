@@ -18,7 +18,7 @@ const BOOKING = {
 };
 ```
 
-The prototype markup has these values typed in; the `BOOKING` object shows the shape the real data should take. The QR code is a decorative pattern — generate a real one from the booking ID.
+The prototype markup has these values typed in; the `BOOKING` object shows the shape the real data should take. 
 
 ## Interaction spec
 
@@ -26,11 +26,8 @@ The prototype markup has these values typed in; the `BOOKING` object shows the s
 |---|---|
 | Entrance | Drops in from above: translateY(-170px) rotateX(78deg) → settle with overshoot, 1.3s. "CONFIRMED" stamp slams in at 1.5s |
 | Idle | Gentle 3D sway (rotateY ±9°, rotateX ±4°, 6s loop); holographic foil strip drifts; floor shadow breathes |
-| Hover / finger move | Tilt toward pointer: rotateY ±17°, rotateX ±13°; glare follows pointer; foil shifts with pointer |
-| Drag | Horizontal drag spins freely (0.75° per px); on release snaps to nearest face with spring `cubic-bezier(.2,1.5,.35,1)` 0.9s |
-| Tap | Flips 180° (front ticket ↔ back entry pass with QR). Every face change fires a sparkle burst |
-| Keyboard | Enter/Space on the ticket button flips it |
-| Depth | Card has 5 edge layers (visible thickness) and content layers lifted with translateZ (title 34px, booking ID 26px, date/venue 22px, QR 30px) |
+| Depth | Card has 5 edge layers (visible thickness) and content layers lifted with translateZ (title 34px, booking ID 26px, date/venue 22px) |
+| No manual rotation | The ticket can't be dragged, spun or flipped; only the gyro tilt moves it. It's a static `role="img"` element with a full-text `aria-label` (no back face / QR on this screen). Booking ID is set small (14px Roboto Mono) |
 | Actions | Add to calendar → turns green "Added" + toast; Invite a trader → toast "Invite link copied" |
 | Gyro parallax | Tilting the phone tilts the ticket via a `#gyro` layer wrapped around `#card3d` (so it adds to drag/flip). Max ±13° plus up to ~9px of shift, gain 1°/° of device tilt, eased 0.14 per frame. The neutral angle slowly re-centres (0.2% per event). Falls back to the accelerometer gravity vector on phones without a gyroscope. Add `?debug` to the URL for a sensor readout, so it works however the phone is held. Glare and foil follow the tilt; the floor shadow slides the other way. While gyro is active the idle sway stops. Landscape is handled via `screen.orientation.angle` |
 | Motion permission | Listeners start on load. Android (Samsung Internet, Chrome) needs no tap: where Chrome exposes `requestPermission()` it is called silently on load and grants without a gesture. iOS 13+ needs one tap the first time: any tap on the page asks (document-level `click`, not `pointerdown`), and an "Enable tilt effect" chip appears only if no motion data arrived within 0.9s. **In the Angular app, call `DeviceOrientationEvent.requestPermission()` inside the Register/Pay button's click handler** so iOS users grant it there and the ticket tilts the moment the confirmation page opens |
@@ -44,8 +41,7 @@ The prototype markup has these values typed in; the `BOOKING` object shows the s
 > 1. Take the booking as an `@Input()` typed interface matching the `BOOKING` object; no hard-coded values in the template.
 > 2. Move the styles into the component SCSS; keep Roboto / Roboto Mono and the existing colour values.
 > 3. Rewrite the pointer logic with Angular `HostListener`s or `fromEvent` and run it outside the Angular zone (`NgZone.runOutsideAngular`) so the tilt doesn't trigger change detection on every move; use `requestAnimationFrame` for transform updates.
-> 4. Replace the decorative QR with a real QR generated from the booking ID (suggest a lightweight library).
-> 5. Wire "Add to calendar" to download an `.ics` file for the event and "Invite a trader" to the Web Share API with a clipboard fallback.
-> 6. Respect `prefers-reduced-motion`, keep the ticket a real `<button>` with an updating `aria-label`, and keep touch targets ≥44px.
+> > 5. Wire "Add to calendar" to download an `.ics` file for the event and "Invite a trader" to the Web Share API with a clipboard fallback.
+> 6. Respect `prefers-reduced-motion`, keep the ticket's descriptive `aria-label`, and keep touch targets ≥44px.
 > 7. Test on iOS Safari and Android Chrome: check `backface-visibility`, `preserve-3d` and `touch-action: none` behave, and that dragging the ticket doesn't scroll the page.
 > Show me the component tree first, then build it.
