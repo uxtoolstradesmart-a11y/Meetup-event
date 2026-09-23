@@ -32,7 +32,11 @@ The prototype markup has these values typed in; the `BOOKING` object shows the s
 | Keyboard | Enter/Space on the ticket button flips it |
 | Depth | Card has 5 edge layers (visible thickness) and content layers lifted with translateZ (title 34px, booking ID 26px, date/venue 22px, QR 30px) |
 | Actions | Add to calendar → turns green "Added" + toast; Invite a trader → toast "Invite link copied" |
-| Reduced motion | All animation/transition off under `prefers-reduced-motion: reduce` |
+| Gyro parallax | Tilting the phone tilts the ticket via a `#gyro` layer wrapped around `#card3d` (so it adds to drag/flip). Max ±7°, gain 0.4°/° of device tilt, eased 0.1 per frame. The neutral angle slowly re-centres (0.6% per event), so it works however the phone is held. Glare and foil follow the tilt; the floor shadow slides the other way. While gyro is active the idle sway stops. Landscape is handled via `screen.orientation.angle` |
+| Motion permission | Android: works right away. iOS 13+: `DeviceOrientationEvent.requestPermission()` needs a tap, so the page shows an "Enable tilt effect" chip and also asks on the first touch of the ticket. If permission is refused, the chip hides and the idle sway stays |
+| Haptics | `buzz()` uses `navigator.vibrate` on Android. iOS Safari has no vibrate API, so iOS 18+ gets a system tick by toggling a hidden native `<input type="checkbox" switch>`. The celebration pattern `[8, 660, 22, 150, 8, 640, 14, 280, 6, 140, 6]` (starting at 300ms) lines up with the check pop, the ticket landing and bouncing, the CONFIRMED stamp, and the confetti. Flip: `[12,50,6]`; snap back to the same face: 6ms; Add to calendar: `[10,60,10]`; Invite: 10ms |
+| Haptics caveat | Browsers only allow haptics after the user has interacted with the page. In the Angular app the confirmation is a route change after the user taps Register/Pay, so it's the same document and the celebration haptic fires. On a cold page load (like opening this prototype from a link) the first celebration can be silently blocked; the ↻ Replay button in the header replays the entrance, confetti and haptics |
+| Reduced motion | All animation/transition off under `prefers-reduced-motion: reduce`; gyro and haptics also off |
 
 ## Prompt to paste into Claude Code
 

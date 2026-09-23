@@ -84,14 +84,22 @@ input:focus{outline:none;border-color:#3F71EB!important;box-shadow:0 0 0 4px rgb
 .spark{position:absolute;left:-4px;top:-4px;border-radius:2px;animation:spark .9s cubic-bezier(.2,.8,.2,1) both}
 .stampIn{display:inline-block;transform:rotate(-6deg);animation:stampIn .5s cubic-bezier(.2,.8,.2,1) 1.5s both}
 .face,.face *{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.gyroOn .sway3d{animation:none}
+.gyroOn .floorShadow{animation:none}
+#gyro{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+#floor{transition:transform .2s ease-out}
+.hap{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden}
+#motionChip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;border:1px solid rgba(157,186,255,.3);background:rgba(255,255,255,.06);color:#CEE0FF;font:600 12px Roboto,Arial,sans-serif;cursor:pointer}
+#motionChip[hidden]{display:none}
+#motionChip:focus-visible,#replayBtn:focus-visible,#ticket:focus-visible{outline:2px solid #9DBAFF;outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*,*::after{animation:none!important;transition:none!important}}
 </style>
 <style>body{display:flex;justify-content:center;min-height:100vh;background:#070C1A}</style>
 </head>
 <body>
-<div style="position: relative; width: 390px; height: 980px; display: flex; flex-direction: column; font-family: Roboto, Arial, sans-serif; color: #18213B; background: radial-gradient(ellipse 120% 40% at 50% 38%, rgba(53,100,217,0.5), rgba(53,100,217,0) 70%), #0F1830; overflow: hidden;">
+<div id="stage" style="position: relative; width: 100%; max-width: 390px; height: 980px; display: flex; flex-direction: column; font-family: Roboto, Arial, sans-serif; color: #18213B; background: radial-gradient(ellipse 120% 40% at 50% 38%, rgba(53,100,217,0.5), rgba(53,100,217,0) 70%), #0F1830; overflow: hidden;">
 
-<div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden;">
+<div aria-hidden="true" id="confetti" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden;">
 <span class="confetti" style="left: 24.2%; width: 6px; height: 10px; border-radius: 2px; background: #3F71EB; animation-delay: 0.09s; animation-duration: 2.95s;"></span>
 <span class="confetti" style="left: 39.7%; width: 6px; height: 10px; border-radius: 999px; background: #9DBAFF; animation-delay: 0.83s; animation-duration: 3.52s;"></span>
 <span class="confetti" style="left: 28.0%; width: 6px; height: 10px; border-radius: 999px; background: #ffffff; animation-delay: 0.16s; animation-duration: 2.55s;"></span>
@@ -130,7 +138,7 @@ input:focus{outline:none;border-color:#3F71EB!important;box-shadow:0 0 0 4px rgb
 
 <div style="position: relative; height: 56px; flex-shrink: 0; box-sizing: border-box; padding: 0 8px 0 20px; display: flex; align-items: center; justify-content: space-between;">
 <div style="display: flex; align-items: center; gap: 7px;"><svg width="27" height="24" viewBox="0 0 32 28" aria-hidden="true"><path d="M3 19 L9 9" stroke="#E02B59" stroke-width="3.4" stroke-linecap="round" fill="none"></path><path d="M9 23 L17 9" stroke="#EEB268" stroke-width="3.4" stroke-linecap="round" fill="none"></path><path d="M15 23 L23 9" stroke="#00B48E" stroke-width="3.4" stroke-linecap="round" fill="none"></path><path d="M21 23 L28 11" stroke="#3F71EB" stroke-width="3.4" stroke-linecap="round" fill="none"></path></svg><span style="display: flex; flex-direction: column; font-size: 12px; font-weight: 800; line-height: 1; letter-spacing: 0.02em; color: #ffffff;"><span>TRADE</span><span>SMART</span></span></div>
-<a href="#" aria-label="Close and go back to the event page" class="ghost" style="width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #CEE0FF;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></a>
+<span style="display: flex; align-items: center;"><button type="button" id="replayBtn" aria-label="Replay celebration" class="ghost" style="width: 44px; height: 44px; border-radius: 10px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; color: #CEE0FF; cursor: pointer;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg></button><a href="#" aria-label="Close and go back to the event page" class="ghost" style="width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #CEE0FF;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></a></span>
 </div>
 
 <div style="position: relative; flex-grow: 1; box-sizing: border-box; padding: 8px 20px 0; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;">
@@ -141,10 +149,11 @@ input:focus{outline:none;border-color:#3F71EB!important;box-shadow:0 0 0 4px rgb
 
 <!-- 3D TICKET -->
 <div style="align-self: stretch; position: relative; height: 350px; margin-top: 4px;">
-<div class="floorShadow" aria-hidden="true" style="position: absolute; left: 18%; right: 18%; bottom: 0; height: 28px; border-radius: 999px; background: radial-gradient(closest-side, rgba(0,0,0,0.55), rgba(0,0,0,0));"></div>
+<div id="floor" aria-hidden="true" style="position: absolute; left: 18%; right: 18%; bottom: 0; height: 28px;"><div class="floorShadow" style="position: absolute; inset: 0; right: 18%; bottom: 0; height: 28px; border-radius: 999px; background: radial-gradient(closest-side, rgba(0,0,0,0.55), rgba(0,0,0,0));"></div></div>
 <button type="button" id="ticket" aria-label="Ticket. Tap to show entry pass" style="position: absolute; left: 4px; right: 4px; top: 6px; height: 314px; padding: 0; border: 0; background: transparent; cursor: grab; touch-action: none; perspective: 1100px; transform-style: preserve-3d; font-family: Roboto, Arial, sans-serif; text-align: left; -webkit-tap-highlight-color: transparent;">
 <div class="dropIn" style="position: absolute; inset: 0; transform-style: preserve-3d;">
 <div class="sway3d" style="position: absolute; inset: 0; transform-style: preserve-3d;">
+<div id="gyro">
 <div style="position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(0deg) rotateY(0deg); transition: transform 0.9s cubic-bezier(.2,1.5,.35,1);" id="card3d">
 
 <div aria-hidden="true" style="position: absolute; inset: 0; transform-style: preserve-3d;"><div style="position: absolute; inset: 0; border-radius: 20px; background: #3B4F8F; transform: translateZ(3px);"></div><div style="position: absolute; inset: 0; border-radius: 20px; background: #34467F; transform: translateZ(1.5px);"></div><div style="position: absolute; inset: 0; border-radius: 20px; background: #2E3F72; transform: translateZ(0px);"></div><div style="position: absolute; inset: 0; border-radius: 20px; background: #283766; transform: translateZ(-1.5px);"></div><div style="position: absolute; inset: 0; border-radius: 20px; background: #22305A; transform: translateZ(-3px);"></div></div>
@@ -175,6 +184,7 @@ input:focus{outline:none;border-color:#3F71EB!important;box-shadow:0 0 0 4px rgb
 </div>
 </div>
 </div>
+</div>
 </button>
 <div id="sparks" hidden>
 <div aria-hidden="true" style="position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none;">
@@ -183,6 +193,8 @@ input:focus{outline:none;border-color:#3F71EB!important;box-shadow:0 0 0 4px rgb
 </div>
 </div>
 <span class="tapHint" style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #9DBAFF;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5a2 2 0 0 1 4 0v5"></path><path d="M13 9.5a2 2 0 0 1 4 0V11"></path><path d="M17 10.5a2 2 0 0 1 4 0V15a6 6 0 0 1-6 6h-2a6 6 0 0 1-4.8-2.4L5 15.5a2 2 0 0 1 3-2.6L9 14"></path></svg><span id="hint">Drag to spin · tap to flip</span></span>
+<button type="button" id="motionChip" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"></rect><path d="M3 8c-1 2.5-1 5.5 0 8M21 8c1 2.5 1 5.5 0 8"></path></svg>Enable tilt effect</button>
+<label class="hap" aria-hidden="true"><input type="checkbox" switch id="hapSwitch" tabindex="-1">haptic</label>
 </div>
 
 <div style="position: relative; flex-shrink: 0; box-sizing: border-box; padding: 16px 16px 22px; display: flex; flex-direction: column; gap: 10px;">
@@ -228,7 +240,13 @@ const BOOKING = {
   const glare = foil.nextElementSibling;
   const sparks = document.getElementById('sparks');
   const hint = document.getElementById('hint');
-  let rx = 0, ry = 0, drag = null, active = false;
+  const gyroEl = document.getElementById('gyro');
+  const floor = document.getElementById('floor');
+  const stage = document.getElementById('stage');
+  const chip = document.getElementById('motionChip');
+  const hapLabel = document.getElementById('hapSwitch').parentElement;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let rx = 0, ry = 0, drag = null, active = false, pointerOn = false;
   const clamp = (v, m) => Math.max(-m, Math.min(m, v));
   const snap = (v) => Math.round(v / 180) * 180;
   const isBack = (v) => ((Math.round(v / 180) % 2) + 2) % 2 === 1;
@@ -239,7 +257,8 @@ const BOOKING = {
       : 'transform 0.9s cubic-bezier(.2,1.5,.35,1)';
     card.style.transform = 'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
     const back = isBack(ry);
-    hint.textContent = back ? 'Entry pass · tap or drag to flip back' : 'Drag to spin · tap to flip';
+    hint.textContent = back ? 'Entry pass · tap or drag to flip back'
+      : gyro.on ? 'Tilt · drag to spin · tap to flip' : 'Drag to spin · tap to flip';
     ticket.setAttribute('aria-label', back ? 'Entry pass. Tap to show ticket details' : 'Ticket. Tap to show entry pass');
     ticket.style.cursor = mode === 'drag' ? 'grabbing' : 'grab';
   }
@@ -258,13 +277,15 @@ const BOOKING = {
     ry = next; rx = 0; active = false;
     light(0.5, 0.3, false);
     render('spring');
-    if (isBack(next) !== was) burst();
+    if (isBack(next) !== was) { burst(); buzz([12, 50, 6]); }
+    else buzz(6);
   }
   function pos(e) {
     const r = ticket.getBoundingClientRect();
     return { px: (e.clientX - r.left) / r.width, py: (e.clientY - r.top) / r.height };
   }
   ticket.addEventListener('pointerdown', (e) => {
+    pointerOn = true;
     drag = { x: e.clientX, base: snap(ry), moved: false };
     try { ticket.setPointerCapture(e.pointerId); } catch (err) {}
   });
@@ -283,14 +304,103 @@ const BOOKING = {
     }
   });
   const up = () => {
-    const d = drag; drag = null;
+    const d = drag; drag = null; pointerOn = false;
     if (!d) return;
     if (!d.moved) flipTo(d.base + 180); else flipTo(snap(ry));
   };
   ticket.addEventListener('pointerup', up);
   ticket.addEventListener('pointercancel', up);
-  ticket.addEventListener('pointerleave', () => { if (!drag) { rx = 0; ry = snap(ry); light(0.5, 0.3, false); render('spring'); } });
+  ticket.addEventListener('pointerleave', () => { if (!drag) { pointerOn = false; rx = 0; ry = snap(ry); light(0.5, 0.3, false); render('spring'); } });
   ticket.addEventListener('click', (e) => { if (e.detail === 0) flipTo(snap(ry) + 180); }); // keyboard
+
+  /* ---------- Haptics ----------
+     Android Chrome: navigator.vibrate (needs the user to have interacted with the page once —
+     true in the real flow, where they tapped "Register" in the same SPA).
+     iOS Safari 18+: no vibrate API; toggling a native <input switch> produces a system haptic tick. */
+  const canVibrate = typeof navigator.vibrate === 'function';
+  function tickIOS() { try { hapLabel.click(); } catch (err) {} }
+  function buzz(pattern) {
+    if (reduced) return false;
+    const p = Array.isArray(pattern) ? pattern : [pattern];
+    if (canVibrate) { try { return navigator.vibrate(p); } catch (err) { return false; } }
+    let t = 0;
+    p.forEach((ms, i) => { if (i % 2 === 0) setTimeout(tickIOS, t); t += ms; });
+    return true;
+  }
+  // Synced to the entrance: check pops (~0.3s), ticket lands (~0.97s) + bounce, stamp slams (~1.8s), confetti sparkle
+  const CELEBRATE = [8, 660, 22, 150, 8, 640, 14, 280, 6, 140, 6];
+  function celebrate() { setTimeout(() => buzz(CELEBRATE), 300); }
+
+  function replay() {
+    const names = ['dropIn', 'pop', 'drawIn', 'rise', 'stampIn', 'fall'];
+    document.getAnimations().forEach((a) => {
+      if (a.animationName && names.includes(a.animationName)) { a.cancel(); a.play(); }
+    });
+    ry = snap(ry); if (isBack(ry)) ry += 180; rx = 0; render('spring');
+    celebrate();
+  }
+  document.getElementById('replayBtn').addEventListener('click', replay);
+  celebrate(); // may be blocked until first interaction on a cold page load — see HANDOFF.md
+
+  /* ---------- Gyro parallax ----------
+     Subtle: max ±7deg, smoothed, and the neutral angle slowly re-centres to however the phone is held. */
+  const gyro = { on: false, bx: null, by: null, tx: 0, ty: 0, x: 0, y: 0, raf: 0 };
+  const MAX = 7, GAIN = 0.4, RECENTER = 0.006, EASE = 0.1;
+  function screenAngle() {
+    return (screen.orientation && typeof screen.orientation.angle === 'number') ? screen.orientation.angle : (window.orientation || 0);
+  }
+  function onOrient(e) {
+    if (e.beta == null || e.gamma == null) return;
+    const a = ((screenAngle() % 360) + 360) % 360;
+    let x = e.gamma, y = e.beta;
+    if (a === 90) { x = e.beta; y = -e.gamma; }
+    else if (a === 270) { x = -e.beta; y = e.gamma; }
+    else if (a === 180) { x = -e.gamma; y = -e.beta; }
+    if (gyro.bx === null) { gyro.bx = x; gyro.by = y; }
+    gyro.bx += (x - gyro.bx) * RECENTER;
+    gyro.by += (y - gyro.by) * RECENTER;
+    gyro.tx = x - gyro.bx; gyro.ty = y - gyro.by;
+    if (!gyro.on) startGyro();
+  }
+  function startGyro() {
+    gyro.on = true; chip.hidden = true;
+    stage.classList.add('gyroOn');
+    render('spring');
+    const loop = () => {
+      gyro.x += (gyro.tx - gyro.x) * EASE;
+      gyro.y += (gyro.ty - gyro.y) * EASE;
+      const ay = clamp(gyro.x * GAIN, MAX), ax = clamp(-gyro.y * GAIN, MAX);
+      gyroEl.style.transform = 'rotateX(' + ax.toFixed(2) + 'deg) rotateY(' + ay.toFixed(2) + 'deg)';
+      floor.style.transform = 'translateX(' + (-ay * 1.6).toFixed(1) + 'px) scaleX(' + (1 - Math.abs(ay) / 60).toFixed(3) + ')';
+      if (!pointerOn) {
+        const px = 0.5 + ay / (MAX * 2.4), py = 0.35 - ax / (MAX * 2.4);
+        glare.style.opacity = 0.55;
+        glare.style.background = 'radial-gradient(circle at ' + (px * 100).toFixed(1) + '% ' + (py * 100).toFixed(1) + '%, rgba(255,255,255,0.22), rgba(255,255,255,0) 45%)';
+        foil.classList.remove('foilIdle');
+        foil.style.backgroundPosition = (100 - px * 100).toFixed(1) + '% ' + (py * 100).toFixed(1) + '%';
+      }
+      gyro.raf = requestAnimationFrame(loop);
+    };
+    gyro.raf = requestAnimationFrame(loop);
+  }
+  function listen() { window.addEventListener('deviceorientation', onOrient); }
+  const needsPermission = typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function';
+  function askPermission() {
+    if (gyro.on || !needsPermission) return;
+    DeviceOrientationEvent.requestPermission()
+      .then((state) => { if (state === 'granted') listen(); else chip.hidden = true; })
+      .catch(() => { chip.hidden = true; });
+  }
+  if (!reduced && typeof DeviceOrientationEvent !== 'undefined') {
+    if (needsPermission) {
+      // iOS: motion access needs a tap. Offer the chip, and also ask on the first touch of the ticket.
+      chip.hidden = false;
+      chip.addEventListener('click', () => { buzz(8); askPermission(); });
+      ticket.addEventListener('pointerdown', askPermission, { once: true });
+    } else {
+      listen();
+    }
+  }
 
   // Toast + actions
   const toastWrap = document.getElementById('toastWrap');
@@ -306,9 +416,10 @@ const BOOKING = {
     document.getElementById('calTick').hidden = false;
     document.getElementById('calIcon').hidden = true;
     document.getElementById('calLabel').textContent = 'Added';
+    buzz([10, 60, 10]);
     toast('Saved to your calendar');
   });
-  document.getElementById('inviteBtn').addEventListener('click', () => toast('Invite link copied'));
+  document.getElementById('inviteBtn').addEventListener('click', () => { buzz(10); toast('Invite link copied'); });
 })();
 </script>
 </body>
