@@ -343,11 +343,13 @@ const BOOKING = {
   celebrate(); // may be blocked until first interaction on a cold page load — see HANDOFF.md
 
   /* ---------- Gyro parallax ----------
-     Subtle: max ±7deg, smoothed, and the neutral angle slowly re-centres to however the phone is held.
+     Max ±13deg plus a few px of shift, smoothed, and the neutral angle slowly re-centres to however the phone is held.
      Source 1: deviceorientation (gyroscope). Source 2 (phones without a usable gyro, or when orientation
      reports nulls): devicemotion gravity vector from the accelerometer. */
   const gyro = { on: false, src: '', bx: null, by: null, tx: 0, ty: 0, x: 0, y: 0, raf: 0, n: 0, raw: [0, 0] };
-  const MAX = 7, GAIN = 0.6, RECENTER = 0.003, EASE = 0.12;
+  // Reduced-motion users still get tilt (it only moves when they move the phone), at half strength.
+  const STRENGTH = reduced ? 0.5 : 1;
+  const MAX = 13 * STRENGTH, GAIN = 1.0 * STRENGTH, SHIFT = 0.7, RECENTER = 0.002, EASE = 0.14;
   const DEG = 180 / Math.PI;
   function screenAngle() {
     const a = (screen.orientation && typeof screen.orientation.angle === 'number') ? screen.orientation.angle : (window.orientation || 0);
@@ -391,8 +393,8 @@ const BOOKING = {
       gyro.x += (gyro.tx - gyro.x) * EASE;
       gyro.y += (gyro.ty - gyro.y) * EASE;
       const ay = clamp(gyro.x * GAIN, MAX), ax = clamp(-gyro.y * GAIN, MAX);
-      gyroEl.style.transform = 'rotateX(' + ax.toFixed(2) + 'deg) rotateY(' + ay.toFixed(2) + 'deg)';
-      floor.style.transform = 'translateX(' + (-ay * 1.6).toFixed(1) + 'px) scaleX(' + (1 - Math.abs(ay) / 60).toFixed(3) + ')';
+      gyroEl.style.transform = 'translate3d(' + (ay * SHIFT).toFixed(1) + 'px,' + (-ax * SHIFT).toFixed(1) + 'px,0) rotateX(' + ax.toFixed(2) + 'deg) rotateY(' + ay.toFixed(2) + 'deg)';
+      floor.style.transform = 'translateX(' + (-ay * 2).toFixed(1) + 'px) scaleX(' + (1 - Math.abs(ay) / 50).toFixed(3) + ')';
       if (!pointerOn) {
         const px = 0.5 + ay / (MAX * 2.4), py = 0.35 - ax / (MAX * 2.4);
         glare.style.opacity = 0.55;
@@ -424,7 +426,7 @@ const BOOKING = {
         else if (o === 'denied') chip.hidden = true; // an 'error' (no user gesture) leaves the chip up to try again
       });
   }
-  if (!reduced && typeof DeviceOrientationEvent !== 'undefined') {
+  if (typeof DeviceOrientationEvent !== 'undefined') {
     if (needsPermission) {
       // iOS (Safari and Chrome — both WebKit): motion access needs a tap. The request must come from a
       // click/touchend, not pointerdown, or iOS rejects it as "not a user gesture".
@@ -451,7 +453,8 @@ const BOOKING = {
         'events     : ' + gyro.n,
         'tilt x/y   : ' + gyro.raw[0].toFixed(1) + ' / ' + gyro.raw[1].toFixed(1),
         'ticket rot : ' + (gyroEl.style.transform || '-'),
-        'vibrate    : ' + canVibrate
+        'vibrate    : ' + canVibrate,
+        'browser    : ' + navigator.userAgent.replace(/^.*?\) /, '').slice(0, 60)
       ].join('\n');
       requestAnimationFrame(tick);
     };
